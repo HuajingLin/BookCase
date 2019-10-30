@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">BookCase</string>
+    <string-array name="books">
+        <item>Where the Wild Things Are</item>
+        <item>The Very Hungry Caterpillar</item>
+        <item>Goodnight Moon</item>
+        <item>The Lion, the Witch and the Wardrobe</item>
+        <item>Charlotte\'s Web</item>
+        <item>Alice\'s Adventures in Wonderland</item>
+        <item>The Wonderful Things You Will Be</item>
+        <item>The Secret Garden</item>
+        <item>Charlie and the Chocolate Factory</item>
+        <item>Little Blue Truck</item>
+        <item>The Cat in the Hat</item>
+    </string-array>
+</resources>
