@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Adapter;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -22,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     BookDetailsFragment bookDetailsFragment;
     ArrayList<BookDetailsFragment> fragments;
     ViewPager viewPager;
-    //TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         boolean singlePane = findViewById(R.id.viewPager) != null;
         String[] books = getResources().getStringArray(R.array.books);
+
 
         if(singlePane) {
 
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             MyFragmentAdapter adapter = new MyFragmentAdapter(getSupportFragmentManager(), fragments);
             viewPager.setAdapter(adapter);
 
-
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -54,7 +54,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
                 @Override
                 public void onPageSelected(int position) {
+
                     fragments.get(position).displayTitle();
+                    MyProperties.getInstance().currentIndex = position;
                 }
 
                 @Override
@@ -63,8 +65,14 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 }
             });
 
-        }
-        else{
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    viewPager.setCurrentItem(MyProperties.getInstance().currentIndex);
+                }
+            }, 100);
+
+        }else{
 
             bookDetailsFragment = new BookDetailsFragment();
 
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     .add(R.id.container_1, bookListFragment)
                     .add(R.id.container_2, bookDetailsFragment)
                     .commit();
+
         }
 
     }
@@ -103,6 +112,21 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         @Override
         public int getCount() {
             return fragments.size();
+        }
+    }
+
+    public static class MyProperties {
+        private static MyProperties mInstance= null;
+
+        public int currentIndex = 0;
+
+        protected MyProperties(){}
+
+        public static synchronized MyProperties getInstance() {
+            if(null == mInstance){
+                mInstance = new MyProperties();
+            }
+            return mInstance;
         }
     }
 }

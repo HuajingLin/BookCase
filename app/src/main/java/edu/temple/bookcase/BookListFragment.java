@@ -1,7 +1,9 @@
 package edu.temple.bookcase;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -52,7 +54,7 @@ public class BookListFragment extends Fragment {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_book_list, container, false);
 
-        ListView listView = (ListView)inflater.inflate(R.layout.fragment_book_list, container, false);
+        final ListView listView = (ListView)inflater.inflate(R.layout.fragment_book_list, container, false);
 
         ArrayAdapter adapter = new ArrayAdapter<String>((Context) fragmentParent, android.R.layout.simple_list_item_1, bookList);
 
@@ -62,10 +64,23 @@ public class BookListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 fragmentParent.bookSelected(parent.getItemAtPosition(position).toString());
+                MainActivity.MyProperties.getInstance().currentIndex = position;
             }
         });
+
         return listView;
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fragmentParent.bookSelected(bookList.get(MainActivity.MyProperties.getInstance().currentIndex));
+            }
+        }, 100);
     }
 
 
