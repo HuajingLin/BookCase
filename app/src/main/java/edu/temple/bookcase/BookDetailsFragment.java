@@ -1,31 +1,36 @@
 package edu.temple.bookcase;
-
-import android.content.Context;
-import android.net.Uri;
+/*
+    Author : Huajing Lin
+    date: November 10, 2019
+ */
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 
 public class BookDetailsFragment extends Fragment {
 
-    private static final String BOOK_KEY = "book";
+    private static final String BOOK_KEY = "bookKey";
+    private Book book;
 
-    String bookTitle;
+    ImageView bookPicture = null;
+    TextView bookTitle = null;
+    TextView bookAuthor = null;
+    TextView bookPublished = null;
 
-    public BookDetailsFragment() {
-        // Required empty public constructor
-    }
+    public BookDetailsFragment() {}
 
-    public static BookDetailsFragment newInstance(String bookTitle) {
+    public static BookDetailsFragment newInstance(Book book) {
         BookDetailsFragment fragment = new BookDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(BOOK_KEY, bookTitle);
+        args.putParcelable(BOOK_KEY, (Parcelable) book);
         fragment.setArguments(args);
         return fragment;
     }
@@ -33,25 +38,33 @@ public class BookDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
-            bookTitle = getArguments().getString(BOOK_KEY);
+            book = getArguments().getParcelable(BOOK_KEY);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_book_details, container, false);
+        View v = inflater.inflate(R.layout.fragment_book_details, container, false);
+
+        bookPicture = v.findViewById(R.id.imageView);
+        bookTitle = v.findViewById(R.id.tvTitle);
+        bookAuthor = v.findViewById(R.id.tvAuthor);
+        bookPublished = v.findViewById(R.id.tvPublished);
+
+        if(book != null) {
+            changeBook(book);
+        }
+        return v;
     }
 
-    public void displayBook(String title){
+    public void changeBook(Book book) {
 
-        ((TextView)getView()).setText(title);
+        bookTitle.setText(book.getTitle());
+        bookAuthor.setText(book.getAuthor());
+        bookPublished.setText(Integer.toString(book.getPublished()));
+        Picasso.get().load(book.getCoverURL()).into(bookPicture);
     }
 
-    public  void displayTitle(){
-        ((TextView)getView()).setText(bookTitle);
-    }
 }
